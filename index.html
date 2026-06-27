@@ -26,7 +26,7 @@
             color: var(--text-light);
             padding: 20px;
             overflow-x: hidden;
-            overflow-y: auto; /* Гарантируем рабочий вертикальный скролл */
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -235,7 +235,6 @@
             box-shadow: 0 15px 30px rgba(189, 0, 255, 0.3);
         }
 
-        /* Идеальные пропорции 3:4 без фиксированной высоты */
         .img-wrapper {
             width: 100%;
             aspect-ratio: 3 / 4; 
@@ -245,7 +244,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Картинка заполняет все пространство без деформации */
         .product-img {
             width: 100%;
             height: 100%;
@@ -336,7 +334,7 @@
             header h1 { font-size: 2.2rem; }
             
             .products-grid { 
-                grid-template-columns: repeat(2, 1fr); /* Две аккуратные колонки на мобилках */
+                grid-template-columns: repeat(2, 1fr); 
                 gap: 12px; 
                 padding: 0 5px; 
             }
@@ -350,7 +348,7 @@
                 font-size: 1.1rem;
             }
             .filter-container { 
-                display: flex; /* Исправлен баг блокировки скролла из-за жесткого грида */
+                display: flex; 
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 8px; 
@@ -403,6 +401,7 @@
     <button class="filter-btn active" data-filter="all" id="filter-all"></button>
     <button class="filter-btn" data-filter="keychain" id="filter-keychain"></button>
     <button class="filter-btn" data-filter="badge" id="filter-badge"></button>
+    <button class="filter-btn" data-filter="figure" id="filter-figure"></button>
     <button class="filter-btn" data-filter="figure3d" id="filter-figure3d"></button>
     <button class="filter-btn" data-filter="stickers" id="filter-stickers"></button>
     <button class="filter-btn" data-filter="cards" id="filter-cards"></button>
@@ -423,6 +422,7 @@ const translations = {
         filterAll: "Всё меню",
         filterKeychain: "Брелки",
         filterBadge: "Значки",
+        filterFigure: "Фигурки",
         filterFigure3d: "3D Статуэтки",
         filterStickers: "Стикеры",
         filterCards: "Карточки",
@@ -435,6 +435,7 @@ const translations = {
         filterAll: "Ամբողջ տեսականին",
         filterKeychain: "Բրելոկներ",
         filterBadge: "Կրծքանշաններ",
+        filterFigure: "Արձանիկներ",
         filterFigure3d: "3D Արձանիկներ",
         filterStickers: "Ստիկերներ",
         filterCards: "Քարտեր",
@@ -447,6 +448,7 @@ const translations = {
         filterAll: "All Menu",
         filterKeychain: "Keychains",
         filterBadge: "Badges",
+        filterFigure: "Figures",
         filterFigure3d: "3D Figures",
         filterStickers: "Stickers",
         filterCards: "Cards",
@@ -456,6 +458,7 @@ const translations = {
 };
 
 const categoryMap = {
+    // Բրելոկներ / Брелки
     'բրելոկ': 'keychain',
     'բրելոկներ': 'keychain',
     'брелок': 'keychain',
@@ -463,6 +466,7 @@ const categoryMap = {
     'keychain': 'keychain',
     'keychains': 'keychain',
 
+    // Կրծքանշաններ / Значки
     'կրծքանշան': 'badge',
     'կրծքանշաններ': 'badge',
     'значок': 'badge',
@@ -470,22 +474,30 @@ const categoryMap = {
     'badge': 'badge',
     'badges': 'badge',
 
+    // Սովորական Արձանիկներ / Обычные Фигурки
+    'արձանիկ': 'figure',
+    'արձանիկներ': 'figure',
+    'ֆիգուրկա': 'figure',
+    'фигурка': 'figure',
+    'фигурки': 'figure',
+    'figure': 'figure',
+    'figures': 'figure',
+
+    // 3Դ արձանիկներ / 3D Статуэтки
     '3դ արձանիկներ': 'figure3d',
     '3դ արձանիկ': 'figure3d',
     '3d արձանիկ': 'figure3d',
     '3d արձանիկներ': 'figure3d',
-    'արձանիկ': 'figure3d',
-    'արձանիկներ': 'figure3d',
     '3d статуэтки': 'figure3d',
     '3d статуэтка': 'figure3d',
     'статуэтка': 'figure3d',
     'статуэтки': 'figure3d',
-    'фигурка': 'figure3d',
-    'фигурки': 'figure3d',
     '3d фигурки': 'figure3d',
+    '3d фигурка': 'figure3d',
     '3d figure': 'figure3d',
     '3d figures': 'figure3d',
 
+    // Ստիկերներ / Стикеры
     'ստիկեր': 'stickers',
     'ստիկերներ': 'stickers',
     'стикер': 'stickers',
@@ -493,6 +505,7 @@ const categoryMap = {
     'sticker': 'stickers',
     'stickers': 'stickers',
 
+    // Քարտեր / Карточки
     'քարտ': 'cards',
     'քարտեր': 'cards',
     'карточка': 'cards',
@@ -593,6 +606,7 @@ function updateInterfaceText() {
         'filter-all': 'filterAll',
         'filter-keychain': 'filterKeychain',
         'filter-badge': 'filterBadge',
+        'filter-figure': 'filterFigure',
         'filter-figure3d': 'filterFigure3d',
         'filter-stickers': 'filterStickers',
         'filter-cards': 'filterCards'
