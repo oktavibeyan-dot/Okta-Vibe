@@ -2,7 +2,7 @@
 <html lang="am">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Okta_Vibe — Showcase</title>
     <style>
         :root {
@@ -15,6 +15,8 @@
         }
 
         html, body {
+            background-color: #1a0b2e;
+            overscroll-behavior: none;
             overflow-x: hidden;
             width: 100%;
         }
@@ -27,13 +29,21 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        .bg-fixed-layer {
+            position: fixed;
+            top: -100px;
+            left: -100px;
+            right: -100px;
+            bottom: -100px;
+            background: var(--bg-gradient);
+            z-index: -2;
+        }
+
         .filter-btn, .lang-btn, .social-links a, .search-input {
             outline: none;
         }
 
         body {
-            background: var(--bg-gradient);
-            background-attachment: fixed;
             color: var(--text-light);
             min-height: 100vh;
             padding: 20px;
@@ -113,7 +123,6 @@
             transform: translateY(-3px);
         }
 
-        /* Стильный поисковик с лупой */
         .search-container {
             position: relative;
             max-width: 500px;
@@ -216,12 +225,34 @@
             box-shadow: 0 15px 30px rgba(189, 0, 255, 0.3);
         }
 
+        .img-wrapper {
+            width: 100%;
+            height: 380px;
+            position: relative;
+            background: #111;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .img-blur-bg {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(15px) brightness(0.6);
+            opacity: 0.65;
+            z-index: 1;
+        }
+
         .product-img {
             width: 100%;
-            height: 250px;
-            object-fit: cover;
-            background: #111;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
         }
 
         .product-info {
@@ -262,53 +293,50 @@
         .particle {
             position: absolute;
             font-size: 1.5rem;
-            opacity: 0.4;
-            animation: pulseGlow 3s infinite ease-in-out;
+            opacity: 0.3;
+            animation: pulseGlow 4s infinite ease-in-out;
             animation-delay: var(--d);
         }
 
         .particle.star {
             color: #e0c3fc;
-            text-shadow: 0 0 10px var(--neon-purple), 0 0 20px #8ec5fc;
+            text-shadow: 0 0 10px var(--neon-purple);
         }
 
         @keyframes pulseGlow {
             0%, 100% {
-                transform: scale(0.8) translateY(0) rotate(0deg);
-                opacity: 0.3;
+                transform: scale(0.8) translateY(0);
+                opacity: 0.2;
             }
             50% {
-                transform: scale(1.2) translateY(-10px) rotate(10deg);
-                opacity: 0.8;
-                text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-purple);
+                transform: scale(1.2) translateY(-8px);
+                opacity: 0.6;
             }
         }
 
-        /* Мобильная адаптация */
         @media (max-width: 600px) {
-            header { padding-top: 80px; }
+            header { padding-top: 35px; }
             .lang-switcher { top: 15px; right: 50%; transform: translateX(50%); width: max-content; }
             header h1 { font-size: 2.2rem; }
-            
-            /* Удлиняем карточки в высоту на смартфонах */
             .products-grid { 
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 gap: 15px; 
                 padding: 0 10px; 
             }
-            .product-card {
-                min-height: 380px; /* Фиксированная минимальная высота */
-            }
-            .product-img { 
-                height: 240px; /* Картинка теперь больше и длиннее */
+            .img-wrapper { 
+                height: 290px; 
             }
             .product-title {
                 font-size: 1rem;
             }
+            .filter-container { gap: 8px; }
+            .filter-btn { padding: 9px 16px; font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
+
+<div class="bg-fixed-layer"></div>
 
 <div class="space-particles">
     <div class="particle star" style="top: 15%; left: 10%; --d: 0s;">✦</div>
@@ -316,7 +344,6 @@
     <div class="particle star" style="top: 45%; left: 85%; --d: 0.7s;">✦</div>
     <div class="particle star" style="top: 60%; left: 15%; --d: 2.2s;">✧</div>
     <div class="particle star" style="top: 75%; left: 75%; --d: 1.2s;">✦</div>
-    <div class="particle star" style="top: 85%; left: 45%; --d: 0.3s;">✧</div>
 </div>
 
 <header>
@@ -327,28 +354,26 @@
     </div>
 
     <h1 id="main-title">Okta_Vibe</h1>
-    <p id="main-subtitle">Անիմե տեսականու էսթետիկ ցուցափեղկ</p>
+    <p id="main-subtitle"></p>
     
     <div class="social-links">
-        <a href="#" target="_blank">Instagram</a>
-        <a href="#" target="_blank">TikTok</a>
+        <a href="https://www.instagram.com/okta_vibe?igsh=amlnanVwaTBmc2Y0" target="_blank">Instagram</a>
+        <a href="https://www.tiktok.com/@okta_vibe?_r=1&_t=ZS-97YRJlY6nSu" target="_blank">TikTok</a>
     </div>
 </header>
 
 <div class="search-container">
-    <input type="text" id="search-input" class="search-input" placeholder="Որոնում...">
+    <input type="text" id="search-input" class="search-input" placeholder="">
     <span class="search-icon">🔍</span>
 </div>
 
 <div class="filter-container">
-    <button class="filter-btn active" data-filter="all" id="filter-all">Ամբողջ տեսականին</button>
-    <button class="filter-btn" data-filter="keychain" id="filter-keychain">Բրելոկներ</button>
-    <button class="filter-btn" data-filter="badge" id="filter-badge">Կրծքանշաններ</button>
-    <button class="filter-btn" data-filter="figure" id="filter-figure">Արձանիկներ</button>
-    <button class="filter-btn" data-filter="figure3d" id="filter-figure3d">3D Արձանիկներ</button>
-    <button class="filter-btn" data-filter="stickers" id="filter-stickers">Ստիկերներ</button>
-    <button class="filter-btn" data-filter="pens" id="filter-pens">Գրիչներ</button>
-    <button class="filter-btn" data-filter="cards" id="filter-cards">Քարտեր</button>
+    <button class="filter-btn active" data-filter="all" id="filter-all"></button>
+    <button class="filter-btn" data-filter="keychain" id="filter-keychain"></button>
+    <button class="filter-btn" data-filter="badge" id="filter-badge"></button>
+    <button class="filter-btn" data-filter="figure3d" id="filter-figure3d"></button>
+    <button class="filter-btn" data-filter="stickers" id="filter-stickers"></button>
+    <button class="filter-btn" data-filter="cards" id="filter-cards"></button>
 </div>
 
 <main class="products-grid" id="shop-grid"></main>
@@ -366,10 +391,8 @@ const translations = {
         filterAll: "Всё меню",
         filterKeychain: "Брелки",
         filterBadge: "Значки",
-        filterFigure: "Фигурки",
-        filterFigure3d: "3D Фигурки",
+        filterFigure3d: "3D Статуэтки",
         filterStickers: "Стикеры",
-        filterPens: "Ручки",
         filterCards: "Карточки",
         loading: "Загрузка космического меню...",
         empty: "Ничего не найдено"
@@ -380,10 +403,8 @@ const translations = {
         filterAll: "Ամբողջ տեսականին",
         filterKeychain: "Բրելոկներ",
         filterBadge: "Կրծքանշաններ",
-        filterFigure: "Արձանիկներ",
         filterFigure3d: "3D Արձանիկներ",
         filterStickers: "Ստիկերներ",
-        filterPens: "Գրիչներ",
         filterCards: "Քարտեր",
         loading: "Տեսականին բեռնվում է...",
         empty: "Ոչինչ չի գտնվել"
@@ -394,10 +415,8 @@ const translations = {
         filterAll: "All Menu",
         filterKeychain: "Keychains",
         filterBadge: "Badges",
-        filterFigure: "Figures",
         filterFigure3d: "3D Figures",
         filterStickers: "Stickers",
-        filterPens: "Pens",
         filterCards: "Cards",
         loading: "Loading space menu...",
         empty: "Nothing found"
@@ -412,7 +431,6 @@ const categoryMap = {
     '3d արձանիկ': 'figure3d',
     '3d ֆիգուր': 'figure3d',
     'ստիկեր': 'stickers',
-    'գրիչ': 'pens',
     'քարտ': 'cards'
 };
 
@@ -494,10 +512,8 @@ function updateInterfaceText() {
     document.getElementById('filter-all').innerText = translations[currentLang].filterAll;
     document.getElementById('filter-keychain').innerText = translations[currentLang].filterKeychain;
     document.getElementById('filter-badge').innerText = translations[currentLang].filterBadge;
-    document.getElementById('filter-figure').innerText = translations[currentLang].filterFigure;
     document.getElementById('filter-figure3d').innerText = translations[currentLang].filterFigure3d;
     document.getElementById('filter-stickers').innerText = translations[currentLang].filterStickers;
-    document.getElementById('filter-pens').innerText = translations[currentLang].filterPens;
     document.getElementById('filter-cards').innerText = translations[currentLang].filterCards;
     searchInput.placeholder = translations[currentLang].searchPlaceholder;
 }
@@ -505,7 +521,6 @@ function updateInterfaceText() {
 function renderProducts() {
     grid.innerHTML = ''; 
     
-    // Фильтрация по категориям и по поиску одновременно
     const filtered = products.filter(p => {
         const matchesCategory = currentFilter === 'all' || p.category === currentFilter;
         
@@ -528,7 +543,10 @@ function renderProducts() {
         const localTitle = prod.title[currentLang] || prod.title['am'];
 
         card.innerHTML = `
-            <img src="${prod.img}" alt="${localTitle}" class="product-img" onerror="this.src='https://via.placeholder.com/300x300/1a0b2e/ffffff?text=Okta+Vibe'">
+            <div class="img-wrapper">
+                <div class="img-blur-bg" style="background-image: url('${prod.img}');"></div>
+                <img src="${prod.img}" alt="${localTitle}" class="product-img" onerror="this.src='https://via.placeholder.com/300x300/1a0b2e/ffffff?text=Okta+Vibe'">
+            </div>
             <div class="product-info">
                 <div>
                     <div class="product-title">${localTitle}</div>
@@ -546,7 +564,6 @@ function renderProducts() {
     });
 }
 
-// Слушатель ввода для поиска
 searchInput.addEventListener('input', (e) => {
     searchQuery = e.target.value;
     renderProducts();
