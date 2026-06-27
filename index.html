@@ -536,7 +536,8 @@ async function loadProductsFromCSV() {
     grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted); font-weight:600; padding: 40px;">${translations[currentLang].loading}</div>`;
     
     try {
-        let csvUrl = 'inventory_export_2026-06-18.csv?v=' + Date.now();
+        // Правка здесь: убрали ?v=Date.now(), теперь кэширование Vercel работает правильно
+        let csvUrl = 'inventory_export_2026-06-18.csv';
         if (window.location.protocol === 'blob:') {
             try {
                 const blobTarget = window.location.href.replace(/^blob:/, '');
