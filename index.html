@@ -19,6 +19,7 @@
             overscroll-behavior: none;
             overflow-x: hidden;
             width: 100%;
+            min-height: 100%;
         }
 
         * {
@@ -36,7 +37,8 @@
             right: -100px;
             bottom: -100px;
             background: var(--bg-gradient);
-            z-index: -2;
+            z-index: -3;
+            pointer-events: none;
         }
 
         .filter-btn, .lang-btn, .social-links a, .search-input {
@@ -47,6 +49,11 @@
             color: var(--text-light);
             min-height: 100vh;
             padding: 20px;
+        }
+
+        header, .search-container, .filter-container, .products-grid {
+            position: relative;
+            z-index: 2;
         }
 
         header {
@@ -181,6 +188,7 @@
             color: var(--text-light);
             transition: all 0.3s ease;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .filter-btn.active, .filter-btn:hover {
@@ -286,7 +294,7 @@
             width: 100vw;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: -2;
             overflow: hidden;
         }
 
@@ -329,8 +337,28 @@
             .product-title {
                 font-size: 1rem;
             }
-            .filter-container { gap: 8px; }
-            .filter-btn { padding: 9px 16px; font-size: 0.9rem; }
+            .filter-container { 
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px; 
+                padding: 0 15px; 
+                margin-bottom: 30px;
+            }
+            .filter-btn { 
+                padding: 11px 10px; 
+                font-size: 0.85rem; 
+                width: 100%;
+                white-space: normal;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .filter-btn[data-filter="all"] {
+                grid-column: span 2;
+            }
+            .filter-btn[data-filter="cards"] {
+                grid-column: span 2;
+            }
         }
     </style>
 </head>
@@ -427,7 +455,7 @@ const categoryMap = {
     'բրելոկ': 'keychain',
     'կրծքանշան': 'badge',
     'արձանիկ': 'figure',
-    'ֆիգուր': 'figure',
+    'ֆիгиուր': 'figure',
     '3d արձանիկ': 'figure3d',
     '3d ֆիգուր': 'figure3d',
     'ստիկեր': 'stickers',
@@ -453,10 +481,21 @@ function parseCSVLine(text) {
 }
 
 async function loadProductsFromCSV() {
-    grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted); font-weight:600;">${translations[currentLang].loading}</div>`;
+    grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted); font-weight:600; padding: 40px;">${translations[currentLang].loading}</div>`;
     
     try {
-        const response = await fetch('inventory_export_2026-06-18.csv?v=' + Date.now());
+        let csvUrl = 'inventory_export_2026-06-18.csv?v=' + Date.now();
+        if (window.location.protocol === 'blob:') {
+            try {
+                const blobTarget = window.location.href.replace(/^blob:/, '');
+                const targetUrl = new URL(blobTarget);
+                csvUrl = targetUrl.origin + '/' + csvUrl;
+            } catch (e) {
+                csvUrl = '/' + csvUrl;
+            }
+        }
+
+        const response = await fetch(csvUrl);
         if (!response.ok) throw new Error('Файл CSV не найден.');
         
         const data = await response.text();
@@ -474,7 +513,7 @@ async function loadProductsFromCSV() {
             const rawType = columns[2];    
             const price = columns[3] + " ֏";
             
-            const cleanType = rawType.toLowerCase();
+            const cleanType = rawType.toLowerCase().trim();
             const category = categoryMap[cleanType] || 'all';
             
             let imgUrl = `/img/product_${itemNumber}.png`;
@@ -498,7 +537,7 @@ async function loadProductsFromCSV() {
         renderProducts();
     } catch (error) {
         console.error(error);
-        grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--neon-pink); padding: 20px;">
+        grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--neon-pink); padding: 40px; font-weight:600;">
             Error loading inventory file.<br>
             <span style="font-size:0.85rem; color:var(--text-muted); display:block; margin-top:10px;">
                 ${error.message}
@@ -508,14 +547,24 @@ async function loadProductsFromCSV() {
 }
 
 function updateInterfaceText() {
-    document.getElementById('main-subtitle').innerText = translations[currentLang].subtitle;
-    document.getElementById('filter-all').innerText = translations[currentLang].filterAll;
-    document.getElementById('filter-keychain').innerText = translations[currentLang].filterKeychain;
-    document.getElementById('filter-badge').innerText = translations[currentLang].filterBadge;
-    document.getElementById('filter-figure3d').innerText = translations[currentLang].filterFigure3d;
-    document.getElementById('filter-stickers').innerText = translations[currentLang].filterStickers;
-    document.getElementById('filter-cards').innerText = translations[currentLang].filterCards;
-    searchInput.placeholder = translations[currentLang].searchPlaceholder;
+    const subtitleEl = document.getElementById('main-subtitle');
+    if (subtitleEl) subtitleEl.innerText = translations[currentLang].subtitle;
+    
+    const ids = {
+        'filter-all': 'filterAll',
+        'filter-keychain': 'filterKeychain',
+        'filter-badge': 'filterBadge',
+        'filter-figure3d': 'filterFigure3d',
+        'filter-stickers': 'filterStickers',
+        'filter-cards': 'filterCards'
+    };
+    
+    for (const [id, key] of Object.entries(ids)) {
+        const el = document.getElementById(id);
+        if (el) el.innerText = translations[currentLang][key];
+    }
+    
+    if (searchInput) searchInput.placeholder = translations[currentLang].searchPlaceholder;
 }
 
 function renderProducts() {
@@ -533,7 +582,7 @@ function renderProducts() {
     });
 
     if (filtered.length === 0 && products.length > 0) {
-        grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted); padding: 20px;">${translations[currentLang].empty}</div>`;
+        grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted); padding: 40px; font-weight:600;">${translations[currentLang].empty}</div>`;
         return;
     }
 
