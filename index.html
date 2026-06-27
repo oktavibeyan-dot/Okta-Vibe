@@ -14,12 +14,20 @@
             --text-muted: #a5a5c5;
         }
 
-        html, body {
-            background-color: #1a0b2e;
-            overscroll-behavior: none;
-            overflow-x: hidden;
+        html {
             width: 100%;
-            min-height: 100%;
+            height: 100%;
+        }
+
+        body {
+            background-color: #1a0b2e;
+            width: 100%;
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto; /* Гарантируем рабочий вертикальный скролл */
+            -webkit-overflow-scrolling: touch;
         }
 
         * {
@@ -32,10 +40,10 @@
 
         .bg-fixed-layer {
             position: fixed;
-            top: -100px;
-            left: -100px;
-            right: -100px;
-            bottom: -100px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: var(--bg-gradient);
             z-index: -3;
             pointer-events: none;
@@ -43,12 +51,6 @@
 
         .filter-btn, .lang-btn, .social-links a, .search-input {
             outline: none;
-        }
-
-        body {
-            color: var(--text-light);
-            min-height: 100vh;
-            padding: 20px;
         }
 
         header, .search-container, .filter-container, .products-grid {
@@ -201,8 +203,8 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
             padding-bottom: 40px;
@@ -233,38 +235,27 @@
             box-shadow: 0 15px 30px rgba(189, 0, 255, 0.3);
         }
 
+        /* Идеальные пропорции 3:4 без фиксированной высоты */
         .img-wrapper {
             width: 100%;
-            height: 380px;
+            aspect-ratio: 3 / 4; 
             position: relative;
             background: #111;
             overflow: hidden;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .img-blur-bg {
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background-size: cover;
-            background-position: center;
-            filter: blur(15px) brightness(0.6);
-            opacity: 0.65;
-            z-index: 1;
-        }
-
+        /* Картинка заполняет все пространство без деформации */
         .product-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover; 
             position: relative;
             z-index: 2;
         }
 
         .product-info {
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -273,18 +264,19 @@
         }
 
         .product-title {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #fff;
             line-height: 1.4;
         }
 
         .product-price {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--neon-pink);
             text-shadow: 0 0 5px rgba(255, 0, 127, 0.5);
+            margin-top: 5px;
         }
 
         .space-particles {
@@ -292,7 +284,7 @@
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100%;
+            height: 100vh;
             pointer-events: none;
             z-index: -2;
             overflow: hidden;
@@ -323,41 +315,53 @@
         }
 
         @media (max-width: 600px) {
-            header { padding-top: 35px; }
-            .lang-switcher { top: 15px; right: 50%; transform: translateX(50%); width: max-content; }
-            header h1 { font-size: 2.2rem; }
-            .products-grid { 
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 15px; 
-                padding: 0 10px; 
+            body {
+                padding: 10px;
             }
-            .img-wrapper { 
-                height: 290px; 
+            header { 
+                padding-top: 15px; 
+                padding-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .lang-switcher { 
+                position: relative;
+                top: 0; 
+                right: 0; 
+                transform: none; 
+                width: max-content; 
+                margin-bottom: 20px;
+            }
+            header h1 { font-size: 2.2rem; }
+            
+            .products-grid { 
+                grid-template-columns: repeat(2, 1fr); /* Две аккуратные колонки на мобилках */
+                gap: 12px; 
+                padding: 0 5px; 
+            }
+            .product-info {
+                padding: 10px;
             }
             .product-title {
-                font-size: 1rem;
+                font-size: 0.9rem;
+            }
+            .product-price {
+                font-size: 1.1rem;
             }
             .filter-container { 
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px; 
-                padding: 0 15px; 
-                margin-bottom: 30px;
+                display: flex; /* Исправлен баг блокировки скролла из-за жесткого грида */
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px; 
+                padding: 0 10px; 
+                margin-bottom: 25px;
             }
             .filter-btn { 
-                padding: 11px 10px; 
-                font-size: 0.85rem; 
-                width: 100%;
-                white-space: normal;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .filter-btn[data-filter="all"] {
-                grid-column: span 2;
-            }
-            .filter-btn[data-filter="cards"] {
-                grid-column: span 2;
+                padding: 8px 14px; 
+                font-size: 0.8rem; 
+                width: auto;
+                white-space: nowrap;
             }
         }
     </style>
@@ -453,13 +457,48 @@ const translations = {
 
 const categoryMap = {
     'բրելոկ': 'keychain',
+    'բրելոկներ': 'keychain',
+    'брелок': 'keychain',
+    'брелки': 'keychain',
+    'keychain': 'keychain',
+    'keychains': 'keychain',
+
     'կրծքանշան': 'badge',
-    'արձանիկ': 'figure',
-    'ֆիгиուր': 'figure',
+    'կրծքանշաններ': 'badge',
+    'значок': 'badge',
+    'значки': 'badge',
+    'badge': 'badge',
+    'badges': 'badge',
+
+    '3դ արձանիկներ': 'figure3d',
+    '3դ արձանիկ': 'figure3d',
     '3d արձանիկ': 'figure3d',
-    '3d ֆիգուր': 'figure3d',
+    '3d արձանիկներ': 'figure3d',
+    'արձանիկ': 'figure3d',
+    'արձանիկներ': 'figure3d',
+    '3d статуэтки': 'figure3d',
+    '3d статуэтка': 'figure3d',
+    'статуэтка': 'figure3d',
+    'статуэтки': 'figure3d',
+    'фигурка': 'figure3d',
+    'фигурки': 'figure3d',
+    '3d фигурки': 'figure3d',
+    '3d figure': 'figure3d',
+    '3d figures': 'figure3d',
+
     'ստիկեր': 'stickers',
-    'քարտ': 'cards'
+    'ստիկերներ': 'stickers',
+    'стикер': 'stickers',
+    'стикеры': 'stickers',
+    'sticker': 'stickers',
+    'stickers': 'stickers',
+
+    'քարտ': 'cards',
+    'քարտեր': 'cards',
+    'карточка': 'cards',
+    'карточки': 'cards',
+    'card': 'cards',
+    'cards': 'cards'
 };
 
 const grid = document.getElementById('shop-grid');
@@ -593,13 +632,12 @@ function renderProducts() {
 
         card.innerHTML = `
             <div class="img-wrapper">
-                <div class="img-blur-bg" style="background-image: url('${prod.img}');"></div>
-                <img src="${prod.img}" alt="${localTitle}" class="product-img" onerror="this.src='https://via.placeholder.com/300x300/1a0b2e/ffffff?text=Okta+Vibe'">
+                <img src="${prod.img}" alt="${localTitle}" class="product-img" onerror="this.src='https://via.placeholder.com/300x400/1a0b2e/ffffff?text=Okta+Vibe'">
             </div>
             <div class="product-info">
                 <div>
                     <div class="product-title">${localTitle}</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; font-style: italic;">${prod.itemType}</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-style: italic;">${prod.itemType}</div>
                 </div>
                 <div class="product-price">${prod.price}</div>
             </div>
